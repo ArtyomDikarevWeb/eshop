@@ -11,18 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('user_site_preferces', function (Blueprint $table) {
             $table->id();
-            $table->string('site_name');
-            $table->string('email')->unique();
-            $table->string('phone')->unique();
-            $table->string('password');
-            $table->string('name');
-            $table->string('surname');
-            $table->string('last_name');
-            $table->rememberToken();
+            $table->unsignedBigInteger('user_id');
+            $table->text('site_preferences');
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('user_id', 'preferences_user_idx');
+            $table->foreign('user_id', 'preferences_user_fk')
+                ->on('users')
+                ->references('id');
         });
     }
 
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('user_site_preferces');
     }
 };
