@@ -11,18 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('offers', function (Blueprint $table) {
             $table->id();
-            $table->string('site_name');
-            $table->string('email')->unique();
-            $table->string('phone')->unique();
-            $table->string('password');
-            $table->string('name');
-            $table->string('surname');
-            $table->string('last_name');
-            $table->rememberToken();
+            $table->unsignedBigInteger('product_id');
+            $table->string('title');
+            $table->unsignedInteger('price');
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('product_id', 'offers_product_idx');
+            $table->foreign('product_id', 'offers_product_fk')
+                ->on('products')
+                ->references('id');
         });
     }
 
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('offers');
     }
 };
