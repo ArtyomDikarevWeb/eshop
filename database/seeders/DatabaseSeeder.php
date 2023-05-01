@@ -6,6 +6,7 @@ namespace Database\Seeders;
 use App\Models\Offer;
 use Illuminate\Database\Seeder;
 use App\Models\Product;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,5 +18,10 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
         Product::factory(20)->create();
         Offer::factory(20)->create();
+
+        DB::table('roles')->insert([
+            ['title' => 'admin'], 
+            ['title' => 'manager']
+        ]);
     }
 }
