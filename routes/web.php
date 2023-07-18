@@ -16,4 +16,6 @@ use App\Http\Controllers\Admin\MainController;
 
 Route::group(['prefix' => 'admin'], function () {
     Route::get('/', MainController::class)->name('dashboard');
+
+    Route::get('/products', )
 });
