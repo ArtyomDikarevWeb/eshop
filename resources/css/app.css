@@ -38,3 +38,7 @@ header {
 .username {
     text-transform: lowercase;
 }
+
+aside {
+    height: calc(100vh - 70px);
+}

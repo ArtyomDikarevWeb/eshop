@@ -10,8 +10,8 @@
     </head>
     <body>
         @include('admin.partials.header')
-        <main>
-            @include('admin.partials.sidebar')
+        @include('admin.partials.sidebar')
+        <main class="pl-48">      
             @yield('content')
         </main>
         @include('admin.partials.footer')
