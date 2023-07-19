@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\MainController;
+use App\Http\Controllers\Admin\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,5 +18,5 @@ use App\Http\Controllers\Admin\MainController;
 Route::group(['prefix' => 'admin'], function () {
     Route::get('/', MainController::class)->name('dashboard');
 
-    Route::get('/products', )
+    Route::resource('products', ProductController::class);
 });
