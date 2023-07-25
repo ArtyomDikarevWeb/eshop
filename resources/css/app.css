@@ -35,6 +35,10 @@ header {
     font-weight: 700;
 }
 
+.wrapper {
+    display: flex;
+}
+
 .username {
     text-transform: lowercase;
 }

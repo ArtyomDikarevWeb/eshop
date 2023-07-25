@@ -10,9 +10,13 @@
     </head>
     <body>
         @include('admin.partials.header')
-        @include('admin.partials.sidebar')
-        <main class="pl-48">      
-            @yield('content')
+        <main>
+            <div class="wrapper">
+                @include('admin.partials.sidebar')
+                <div class="w-full">
+                    @yield('content')
+                </div>   
+            </div>
         </main>
         @include('admin.partials.footer')
     </body>
