@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\MainController;
+use App\Http\Controllers\Admin\OfferController;
 use App\Http\Controllers\Admin\ProductController;
 
 /*
@@ -19,4 +20,5 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('/', MainController::class)->name('dashboard');
 
     Route::resource('products', ProductController::class);
+    Route::resource('offers', OfferController::class);
 });
