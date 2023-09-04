@@ -11,8 +11,12 @@ class Offer extends Model
 {
     use HasFactory, SoftDeletes;
 
-    public function product(): BelongsTo
-    {
-        return $this->belongsTo(Product::class);
-    }
+    protected $fillable = [
+        'title',
+        'description',
+        'amount',
+        'price',
+        'category_id',
+        'image',
+    ];
 }

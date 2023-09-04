@@ -21,7 +21,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group([], function () {
-    Route::get('main/products', [ProductController::class, 'index']);
-
     Route::get('main/offers', [OfferController::class, 'index']);
 });

@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\Product;
 use Faker\Generator;
 use Illuminate\Support\Str;
 
@@ -20,11 +20,13 @@ class OfferFactory extends Factory
      */
     public function definition(): array
     {
-        $randomId = rand(1, 20);
         return [
-            'product_id' => $randomId,
-            'title' => Str::random(10) . ' ' . Product::query()->select('name')->where('id', '=', $randomId)->first()->name,
-            'price' => Product::query()->select('stock_price')->where('id', '=', $randomId)->first()->stock_price * 1.3
+            'category_id' => Category::inRandomOrder()->first(),
+            'description' => $this->faker->text(),
+            'image' => $this->faker->url(),
+            'title' => $this->faker->sentence(1),
+            'amount' => $this->faker->numberBetween(10, 1000),
+            'price' => $this->faker->numberBetween(10000, 500000),
         ];
     }
 }

@@ -1,33 +1,33 @@
-<div class="w-full grid grid-cols-9 gap-4 py-2 h-12" href="{{ route('products.edit', $product->id) }}">
-    <a href="{{ route('products.show', $product->id) }}">
+<div class="w-full grid grid-cols-9 gap-4 py-2 h-12">
+    <a href="{{ route('offers.show', $offer->id) }}">
         <div class="text-center">
-            <p> {{$product->id}} </p>
+            <p> {{$offer->id}} </p>
         </div>
     </a>
     <div class="text-center">
-        <p>{{$product->name}}</p>
+        <p>{{$offer->title}}</p>
     </div>
     <div class="overflow-hidden">
-        <p>{{$product->description}}</p>
+        <p>{{$offer->description}}</p>
     </div>
     <div class="text-center">
-        <p>{{$product->amount}}</p>
+        <p>{{$offer->amount}}</p>
     </div>
     <div class="text-center">
-        <p>{{$product->stock_price / 100}}</p>
+        <p>{{$offer->price / 100}}</p>
     </div>
     <div class="text-center">
-        <p>{{$product->created_at}}</p>
+        <p>{{$offer->created_at}}</p>
     </div>
     <div class="text-center">
-        <p>{{$product->deleted_at}}</p>
+        <p>{{$offer->deleted_at}}</p>
     </div>
-    <a href="{{ route('products.edit', $product->id) }}">
+    <a href="{{ route('offers.edit', $offer->id) }}">
         <div class="flex justify-center">
             <img class="h-10 w-10" src="{{ Vite::asset('resources/images/edit.svg') }}" alt="Edit">
         </div>
     </a>
-    <form class="hover:cursor-pointer" action="{{ route('products.destroy', $product->id) }}" method="POST">
+    <form class="hover:cursor-pointer" action="{{ route('offers.destroy', $offer->id) }}" method="POST">
         @csrf
         @method('DELETE')
         <div class="flex justify-center">

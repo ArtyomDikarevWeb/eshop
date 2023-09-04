@@ -1,5 +1,5 @@
-<form @if(request()->routeIs('products.edit')) action="{{ route('products.update', $product->id) }}" method="POST"@endif>
-    @if(request()->routeIs('products.edit'))
+<form @if(request()->routeIs('offers.edit')) action="{{ route('offers.update', $offer->id) }}" method="POST"@endif>
+    @if(request()->routeIs('offers.edit'))
         @method('PUT')
         @csrf
     @endif
@@ -7,61 +7,61 @@
         <h3 class="text-3xl"> Edit </h3>
     </div>
     <div class="m-2">
-        <label class="mr-3" for="product_id">ID:</label>
+        <label class="mr-3" for="id">ID:</label>
         <input 
             class="px-2 border-2 border-slate-700 border-solid rounded" 
             type="text" 
             name="id" 
-            id="product_id" 
+            id="id" 
             disabled
-            value={{$product->id}} 
+            value={{$offer->id}} 
         />
     </div>
     <div class="m-2">
-        <label class="mr-3" for="product_name">Name:</label>
+        <label class="mr-3" for="name">Name:</label>
         <input type="text" 
             class="px-2 border-2 border-slate-700 border-solid rounded" 
             name="name" 
-            id="product_name" 
-            @disabled(request()->routeIs('products.show')) 
-            value={{$product->name}}
+            id="name" 
+            @disabled(request()->routeIs('offers.show')) 
+            value={{$offer->title}}
         />
     </div>
     <div class="m-2 flex items-center">
-        <label class="mr-3" for="product_description">Description:</label>
+        <label class="mr-3" for="description">Description:</label>
         <textarea 
             class="px-2 w-80 h-40 border-2 border-slate-700 border-solid rounded" 
             name="description" 
-            id="product_description" 
-            @disabled(request()->routeIs('products.show'))
+            id="description" 
+            @disabled(request()->routeIs('offers.show'))
             >
-            {{$product->description}}
+            {{$offer->description}}
         </textarea>
     </div>
     <div class="m-2">
-        <label class="mr-3" for="product_amount">Amount:</label>
+        <label class="mr-3" for="amount">Amount:</label>
         <input 
             class="px-2 border-2 border-slate-700 border-solid rounded" 
             type="text" 
             name="amount" 
-            id="product_amount" 
-            @disabled(request()->routeIs('products.show')) 
-            value={{$product->amount}}
+            id="amount" 
+            @disabled(request()->routeIs('offers.show')) 
+            value={{$offer->amount}}
         />
     </div>
     <div class="m-2">
-        <label class="mr-3" for="product_stock_price">Stock price:</label>
+        <label class="mr-3" for="price">Stock price:</label>
         <input 
             class="px-2 border-2 border-slate-700 border-solid rounded" 
             type="text" 
-            name="stock_price" 
-            id="product_stock_price" 
-            @disabled(request()->routeIs('products.show')) 
-            value={{$product->stock_price}}
+            name="price" 
+            id="price" 
+            @disabled(request()->routeIs('offers.show')) 
+            value={{$offer->price}}
         />
     </div>
     <div class="m-2 flex gap-3 justify-between">
-        @if (request()->routeIs('products.edit'))
+        @if (request()->routeIs('offers.edit'))
             <button 
                 class="p-2 w-max rounded-full 
                 bg-slate-500 text-cyan-50 
@@ -74,14 +74,14 @@
                 bg-slate-500 text-cyan-50 
                 hover:bg-slate-300 hover:text-zinc-600 
                 hover:transition"
-            ><a href="{{ route('products.index') }}">Back</a></button>
+            ><a href="{{ route('offers.index') }}">Back</a></button>
         @else
         <button
             class="p-2 w-max rounded-full 
             bg-slate-500 text-cyan-50 
             hover:bg-slate-300 hover:text-zinc-600 
             hover:transition"
-        ><a href="{{ route('products.index') }}">Back</a></button>
+        ><a href="{{ route('offers.index') }}">Back</a></button>
         @endif
     </div>
 </form>

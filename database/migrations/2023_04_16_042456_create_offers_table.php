@@ -13,15 +13,18 @@ return new class extends Migration
     {
         Schema::create('offers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('category_id');
             $table->string('title');
+            $table->text('description');
+            $table->string('image')->nullable();
+            $table->unsignedInteger('amount');
             $table->unsignedInteger('price');
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index('product_id', 'offers_product_idx');
-            $table->foreign('product_id', 'offers_product_fk')
-                ->on('products')
+            $table->index('category_id', 'category_offers_idx');
+            $table->foreign('category_id', 'category_offers_fk')
+                ->on('categories')
                 ->references('id');
         });
     }

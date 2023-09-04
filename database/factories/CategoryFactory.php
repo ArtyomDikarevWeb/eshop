@@ -7,9 +7,9 @@ use Faker\Generator;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Offer>
  */
-class ProductFactory extends Factory
+class CategoryFactory extends Factory
 {
     protected $faker = Generator::class;
     /**
@@ -20,10 +20,7 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => Str::random(10),
-            'description' => $this->faker->paragraph,
-            'amount' => rand(0, 1000),
-            'stock_price' => rand(0, 2000000)
+            'title' => Str::random(15),
         ];
     }
 }

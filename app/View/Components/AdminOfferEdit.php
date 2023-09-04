@@ -2,18 +2,18 @@
 
 namespace App\View\Components;
 
-use App\Models\Product;
+use App\Models\Offer;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class AdminProductEdit extends Component
+class AdminOfferEdit extends Component
 {
     /**
      * Create a new component instance.
      */
     public function __construct(
-        public Product $product
+        public Offer $offer
     )
     {
         //
@@ -24,6 +24,6 @@ class AdminProductEdit extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.admin-product-edit');
+        return view('components.admin-offer-edit');
     }
 }
