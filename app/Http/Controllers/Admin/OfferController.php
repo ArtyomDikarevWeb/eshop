@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Offer\StoreOfferRequest;
+use App\Http\Requests\Admin\Offer\UpdateOfferRequest;
 use App\Models\Offer;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -37,16 +39,16 @@ class OfferController extends Controller
         return view('admin.offers.create', ['categories' => $categories]);
     }
 
-    public function store(Request $request, StoreOfferAction $action): RedirectResponse
+    public function store(StoreOfferRequest $request, StoreOfferAction $action): RedirectResponse
     {
-        $action($request->all());
+        $action($request->validated());
 
         return response()->redirectTo(route('offers.index'));
     }
 
-    public function update(Offer $offer, Request $request, UpdateOfferAction $action): View
+    public function update(Offer $offer, UpdateOfferRequest $request, UpdateOfferAction $action): View
     {
-        $updatedOffer = $action($offer, $request->all());
+        $updatedOffer = $action($offer, $request->validated());
 
         return view('admin.offers.edit', ['offer' => $updatedOffer]);
     }
