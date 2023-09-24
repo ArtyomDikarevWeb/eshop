@@ -24,8 +24,18 @@ class UserStoreRequest extends FormRequest
         ];
     }
 
+    public function bodyParameters(): array
+    {
+        return [
+            'username' => [
+                'description' => 'Username',
+                'example' => 'CoolGuy23',
+            ]
+        ];
+    }
+
     public function dto(): UserStoreData
     {
-        return new UserStoreData::from(...$this->validated());
+        return UserStoreData::from([...$this->validated()]);
     }
 }
