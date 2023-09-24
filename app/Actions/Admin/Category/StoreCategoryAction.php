@@ -8,7 +8,6 @@ class StoreCategoryAction
 {
     public function __invoke(array $request): bool
     {
-        unset($request['_token'], $request['_method']);
         Category::create($request);
 
         return true;
