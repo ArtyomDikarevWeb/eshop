@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Actions\Admin\Category\StoreCategoryAction;
 use App\Actions\Admin\Category\UpdateCategoryAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Category\StoreCategoryRequest;
+use App\Http\Requests\Admin\Category\UpdateCategoryRequest;
 use App\Models\Category;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
@@ -29,9 +30,9 @@ class CategoryController extends Controller
         return view('admin.categories.edit', ['category' => $category]);
     }
 
-    public function update(Category $category, Request $request, UpdateCategoryAction $action): View
+    public function update(Category $category, UpdateCategoryRequest $request, UpdateCategoryAction $action): View
     {
-        $updatedCategory = $action($category, $request);
+        $updatedCategory = $action($category, $request->validated());
 
         return view('admin.categories.edit', ['category' => $updatedCategory]);
     }
@@ -41,9 +42,9 @@ class CategoryController extends Controller
         return view('admin.categories.create');
     }
 
-    public function store(Request $request, StoreCategoryAction $action): RedirectResponse
+    public function store(StoreCategoryRequest $request, StoreCategoryAction $action): RedirectResponse
     {
-        $action($request->all());
+        $action($request->validated());
 
         return response()->redirectTo(route('categories.index'));
     }
