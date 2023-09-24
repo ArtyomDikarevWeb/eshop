@@ -50,4 +50,11 @@ class OfferController extends Controller
 
         return view('admin.offers.edit', ['offer' => $updatedOffer]);
     }
+
+    public function destroy(Offer $offer): RedirectResponse
+    {
+        $offer->delete();
+
+        return response()->redirectTo(route('offers.index'));
+    }
 }
