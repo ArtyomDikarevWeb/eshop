@@ -28,14 +28,30 @@ class UserStoreRequest extends FormRequest
     {
         return [
             'username' => [
-                'description' => 'Username',
+                'description' => 'Username of user',
                 'example' => 'CoolGuy23',
+            ],
+            'email' => [
+                'description' => 'Email of user',
+                'example' => 'example@gmail.com',
+            ],
+            'phone' => [
+                'description' => 'Phone of user',
+                'example' => '+70000000000',
+            ],
+            'password' => [
+                'description' => 'Password of user',
+                'example' => 'password',
+            ],
+            'repeat_password' => [
+                'description' => 'Value of this field must be a copy of password field\'s value',
+                'example' => 'password',
             ]
         ];
     }
 
     public function dto(): UserStoreData
     {
-        return UserStoreData::from([...$this->validated()]);
+        return UserStoreData::from($this->validated());
     }
 }
