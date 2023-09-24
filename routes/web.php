@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\MainController;
 use App\Http\Controllers\Admin\OfferController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,4 +24,5 @@ Route::group(['prefix' => 'admin'], function () {
     Route::resource('offers', OfferController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('roles', RoleController::class);
+    Route::resource('users', UserController::class);
 });
