@@ -4,25 +4,36 @@ services:
   nginx:
     image: "nginx:stable-alpine"
     ports:
-      - "8000:80"
+      - "${NGINX_HOST_HTTP_PORT}:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - ./app:/var/www/eshop
+    restart: always
+    container_name: eshop_nginx
   mysql:
     image: mysql:8.0
     ports:
-      - "3316:3306"
+      - "${MYSQL_HOST_PORT}:3306"
     env_file:
       - mysql/mysql.env
     volumes:
-      - db:/var/lib/mysql
-    user: "1000:1000"
+      - eshop_db:/var/lib/mysql
+    user: "${PUID}:${PGID}"
+    restart: always
+    container_name: eshop_mysql
   php:
     build:
       context: .
       dockerfile: php/Dockerfile
+      args:
+        - PUID=${PUID}
+        - PGID=${PGID}
+    environment:
+      PHP_IDE_CONFIG: "serverName=${XDEBUG_SERVER_NAME}"
     volumes:
       - ./app:/var/www/eshop
+    restart: always
+    container_name: eshop_php
 
   composer:
     build:
@@ -30,7 +41,7 @@ services:
       dockerfile: php/composer.Dockerfile
     volumes:
       - ./app:/var/www/eshop
-    user: "1000:1000"
+    user: "${PUID}:${PGID}"
   artisan:
     build:
       context: .
@@ -38,14 +49,14 @@ services:
     volumes:
       - ./app:/var/www/eshop
     entrypoint: ["php", "/var/www/eshop/artisan"]
-    user: "1000:1000"
+    user: "${PUID}:${PGID}"
   npm:
     image: node:18.16.0-alpine
     working_dir: /var/www/eshop
     entrypoint: ["npm"]
     volumes:
       - ./app:/var/www/eshop
-    user: "1000:1000"
+    user: "${PUID}:${PGID}"
 
 volumes:
-  db:
+  eshop_db:
