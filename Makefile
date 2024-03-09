@@ -51,7 +51,10 @@ npm/build:
 npm/dev:
 	docker compose run npm run dev
 
-up: run composer/install npm/install npm/build artisan/exec-list
+up: build run composer/install npm/install npm/build artisan/exec-list
+
+build:
+	docker compose -f docker-compose.yaml build
 
 run:
 	docker compose -f docker-compose.yaml up -d
