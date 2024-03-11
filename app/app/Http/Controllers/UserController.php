@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
-use App\Actions\Admin\User\StoreUserAction;
-use App\Actions\Admin\User\UpdateUserAction;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\User\StoreUserRequest;
 use App\Http\Requests\Admin\User\UpdateUserRequest;
 use App\Models\Role;
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 
 class UserController extends Controller
@@ -28,28 +27,24 @@ class UserController extends Controller
 
     public function edit(User $user): View
     {
-        $roles = Role::all();
-
-        return view('admin.users.edit', ['user' => $user, 'roles' => $roles]);
+        return view('admin.users.edit', ['user' => $user, 'roles' => $this->getRoleList()]);
     }
 
-    public function update(User $user, UpdateUserRequest $request, UpdateUserAction $action): View
+    public function update(User $user, UpdateUserRequest $request, UserService $service): View
     {
-        $updatedUser = $action($user, $request->validated());
+        $updatedUser = $service->update($user, $request->validated());
 
-        return view('admin.users.edit', ['user' => $updatedUser, 'roles' => Role::all()]);
+        return view('admin.users.edit', ['user' => $updatedUser, 'roles' => $this->getRoleList()]);
     }
 
     public function create(): View
     {
-        $roles = Role::all();
-
-        return view('admin.users.create', ['roles' => $roles]);
+        return view('admin.users.create', ['roles' => $this->getRoleList()]);
     }
 
-    public function store(StoreUserRequest $request, StoreUserAction $action): RedirectResponse
+    public function store(StoreUserRequest $request, UserService $service): RedirectResponse
     {
-        $action($request->validated());
+        $result = $service->store($request);
 
         return response()->redirectTo(route('users.index'));
     }
@@ -59,5 +54,10 @@ class UserController extends Controller
         $user->delete();
 
         return response()->redirectTo(route('users.index'));
+    }
+
+    private function getRoleList(): Collection
+    {
+        return Role::all();
     }
 }

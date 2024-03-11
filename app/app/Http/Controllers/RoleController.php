@@ -1,16 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
-use App\Actions\Admin\Role\StoreRoleAction;
-use App\Actions\Admin\Role\UpdateRoleAction;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Role\StoreRoleRequest;
 use App\Http\Requests\Admin\Role\UpdateRoleRequest;
 use App\Models\Role;
+use App\Services\RoleService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
@@ -31,9 +28,9 @@ class RoleController extends Controller
         return view('admin.roles.edit', ['role' => $role]);
     }
 
-    public function update(Role $role, UpdateRoleRequest $request, UpdateRoleAction $action): View
+    public function update(Role $role, UpdateRoleRequest $request, RoleService $service): View
     {
-        $updatedRole = $action($role, $request->validated());
+        $updatedRole = $service->update($role, $request->validated());
 
         return view('admin.roles.edit', ['role' => $updatedRole]);
     }
@@ -43,9 +40,9 @@ class RoleController extends Controller
         return view('admin.roles.create');
     }
 
-    public function store(StoreRoleRequest $request, StoreRoleAction $action): RedirectResponse
+    public function store(StoreRoleRequest $request, RoleService $service): RedirectResponse
     {
-        $action($request->validated());
+        $service->store($request->validated());
 
         return response()->redirectTo(route('roles.index'));
     }
