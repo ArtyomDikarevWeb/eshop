@@ -1,3 +1,6 @@
+DOCKER_COMPOSE = docker compose -f docker-compose.yaml
+DOCKER_RUN = docker compose run
+
 all:
 	@echo "Docker: "
 	@echo " - make up"
@@ -11,53 +14,57 @@ all:
 	@echo " - make artisan/migrate-refresh"
 	@echo " - make artisan/migrate-seed"
 	@echo " - make artisan/storage-link"
+	@echo " - make artisan/make"
 	@echo "npm: "
 	@echo " - make npm/install"
 	@echo " - make npm/build"
 	@echo " - make npm/dev"
 
 composer/install:
-	docker compose run composer install
+	${DOCKER_RUN} composer install
 
 artisan/key-generate:
-	docker compose run artisan key:generate
+	${DOCKER_RUN} artisan key:generate
 
 artisan/migrate:
-	docker compose run artisan migrate
+	${DOCKER_RUN} artisan migrate
 
 artisan/seed:
-	docker compose run artisan db:seed
+	${DOCKER_RUN} artisan db:seed
 
 artisan/migrate-refresh:
-	docker compose run artisan migrate:refresh
+	${DOCKER_RUN} artisan migrate:refresh
 
 artisan/migrate-seed:
-	docker compose run artisan migrate --seed
+	${DOCKER_RUN} artisan migrate --seed
 
 artisan/storage-link:
-	docker compose run artisan storage:link
+	${DOCKER_RUN} artisan storage:link
 
 artisan/scribe-generate:
-	docker compose run artisan scribe:generate
+	${DOCKER_RUN} artisan scribe:generate
+
+artisan/make:
+	${DOCKER_RUN} artisan make:$(ENT) $(NAME) $(FLAGS)
 
 artisan/exec-list: artisan/key-generate artisan/migrate-seed artisan/storage-link artisan/scribe-generate
 
 npm/install:
-	docker compose run npm install
+	${DOCKER_RUN} npm install
 
 npm/build:
-	docker compose run npm run build
+	${DOCKER_RUN} npm run build
 
 npm/dev:
-	docker compose run npm run dev
+	${DOCKER_RUN} npm run dev
 
 run: build up composer/install npm/install npm/build artisan/exec-list
 
 build:
-	docker compose -f docker-compose.yaml build
+	${DOCKER_COMPOSE} build
 
 up:
-	docker compose -f docker-compose.yaml up -d
+	${DOCKER_COMPOSE} up -d
 
 down:
-	docker compose -f docker-compose.yaml down
+	${DOCKER_COMPOSE} down

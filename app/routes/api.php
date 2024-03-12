@@ -14,6 +14,6 @@ use App\Http\Controllers\Api\UserController;
 |
 */
 
-Route::group(['prefix' => 'api'], function () {
+Route::group([], function () {
    Route::post('register', [UserController::class, 'store']);
 });
