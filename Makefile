@@ -23,6 +23,15 @@ all:
 composer/install:
 	${DOCKER_RUN} composer install
 
+composer/require:
+	${DOCKER_RUN} composer require $(REQ)
+
+composer/require-dev:
+	${DOCKER_RUN} composer require --dev $(REQ)
+
+composer/autoload:
+	${DOCKER_RUN} composer dump-autoload
+
 artisan/key-generate:
 	${DOCKER_RUN} artisan key:generate
 
@@ -47,7 +56,13 @@ artisan/scribe-generate:
 artisan/make:
 	${DOCKER_RUN} artisan make:$(ENT) $(NAME) $(FLAGS)
 
-artisan/exec-list: artisan/key-generate artisan/migrate-seed artisan/storage-link artisan/scribe-generate
+artisan/publish:
+	${DOCKER_RUN} artisan vendor:publish $(PARAM)
+
+artisan/generate-jwt:
+	${DOCKER_RUN} artisan jwt:secret
+
+artisan/exec-list: artisan/key-generate artisan/migrate-seed artisan/storage-link artisan/scribe-generate artisan/generate-jwt
 
 npm/install:
 	${DOCKER_RUN} npm install

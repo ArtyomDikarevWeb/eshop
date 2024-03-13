@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +15,14 @@ use App\Http\Controllers\Api\UserController;
 |
 */
 
-Route::group([], function () {
+Route::group(['middleware' => 'api'], function () {
+    Route::prefix('auth')
+        ->group(function () {
+            Route::post('login', [AuthController::class, 'login']);
+            Route::post('logout', [AuthController::class, 'logout']);
+            Route::post('refresh', [AuthController::class, 'refresh']);
+            Route::post('me', [AuthController::class, 'me']);
+        });
+
    Route::post('register', [UserController::class, 'store']);
 });
