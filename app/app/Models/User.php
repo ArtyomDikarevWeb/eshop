@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -28,7 +29,7 @@ class User extends Authenticatable implements JWTSubject
         'phone',
         'surname',
         'last_name',
-        'role_id'
+        'role_id',
     ];
 
     /**
@@ -53,6 +54,11 @@ class User extends Authenticatable implements JWTSubject
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function favourites(): BelongsToMany
+    {
+        return $this->belongsToMany(Offer::class, 'favourites');
     }
 
     public function getFullName(): string
