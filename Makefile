@@ -1,5 +1,6 @@
 DOCKER_COMPOSE = docker compose -f docker-compose.yaml
 DOCKER_RUN = docker compose run
+DOCKER_EXEC_TERM = docker exec -it
 
 all:
 	@echo "Docker: "
@@ -83,3 +84,6 @@ up:
 
 down:
 	${DOCKER_COMPOSE} down
+
+api_bash:
+	${DOCKER_EXEC_TERM} eshop_php /bin/bash

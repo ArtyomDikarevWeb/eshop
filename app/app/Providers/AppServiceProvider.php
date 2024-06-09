@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Http\Contracts\AuthServiceContract;
+use App\Services\Api\AuthService;
 use Illuminate\Support\ServiceProvider;
 use Knuckles\Camel\Extraction\ExtractedEndpointData;
 use Knuckles\Scribe\Scribe;
@@ -14,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(AuthServiceContract::class, AuthService::class);
     }
 
     /**
@@ -26,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
             Scribe::beforeResponseCall(function (Request $request, ExtractedEndpointData $endpointData) {
                 $token = auth()->attempt($request->toArray());
 
-                $request->headers->set("Authorization", "Bearer $token");
+                $request->headers->set('Authorization', "Bearer $token");
             });
         }
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Contracts\AuthServiceContract;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\AuthRequest;
 use App\Http\Resources\UserResource;
@@ -18,7 +19,7 @@ use Knuckles\Scribe\Attributes\ResponseFromApiResource;
 #[Group('Auth')]
 class AuthController extends Controller
 {
-    public function __construct()
+    public function __construct(private AuthServiceContract $authService)
     {
         $this->middleware('auth:api', ['except' => ['login']]);
     }
@@ -26,33 +27,27 @@ class AuthController extends Controller
     #[Endpoint('Login', 'Authorize user')]
     #[Response(
         [
-            "data" => [
-                'access_token' => "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vdGltZXRyYWNrZXItYmFja2VuZC5sb2NhbGhvc3Q6ODAwMy9hcGkvdjEvYXV0aC9sb2dpbiIsImlhdCI6MTcwODUzMTc1OCwiZXhwIjoxNzA4NTM1MzU4LCJuYmYiOjE3MDg1MzE3NTgsImp0aSI6ImYyQzQ5Wnp5U0xKWGFwR24iLCJzdWIiOiIyMiIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.CAbPEf7Uj6LhXw1OkVIRpLsZ2993KdkrbYKiEIa5gE8",
+            'data' => [
+                'access_token' => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vdGltZXRyYWNrZXItYmFja2VuZC5sb2NhbGhvc3Q6ODAwMy9hcGkvdjEvYXV0aC9sb2dpbiIsImlhdCI6MTcwODUzMTc1OCwiZXhwIjoxNzA4NTM1MzU4LCJuYmYiOjE3MDg1MzE3NTgsImp0aSI6ImYyQzQ5Wnp5U0xKWGFwR24iLCJzdWIiOiIyMiIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.CAbPEf7Uj6LhXw1OkVIRpLsZ2993KdkrbYKiEIa5gE8',
                 'token_type' => 'bearer',
-                'expires_in' => 3600
+                'expires_in' => 3600,
             ],
         ],
         200,
-        "Success"
+        'Success'
     )]
     #[Response(
         [
-            "data" => [
+            'data' => [
                 'error' => 'Unauthorized',
             ],
         ],
         401,
-        "Fail"
+        'Fail'
     )]
     public function login(AuthRequest $request): JsonResponse
     {
-        $data = $request->dto();
-
-        if (! $token = auth()->attempt($data->toArray())) {
-            return response()->json(['data' => ['error' => 'Unauthorized']], 401);
-        }
-
-        return $this->respondWithToken($token);
+        return $this->authService->login($request->dto());
     }
 
     #[Endpoint('Me', 'Get user data')]
@@ -62,20 +57,20 @@ class AuthController extends Controller
         UserResource::class,
         User::class,
         200,
-        "Returns user data"
+        'Returns user data'
     )]
     #[Response(
         [
-            "data" => [
+            'data' => [
                 'error' => 'Unauthorized',
             ],
         ],
         401,
-        "Fail"
+        'Fail'
     )]
     public function me(): JsonResource
     {
-        return UserResource::make(auth()->user());
+        return $this->authService->me();
     }
 
     #[Endpoint('Logout', 'Flush token')]
@@ -83,27 +78,25 @@ class AuthController extends Controller
     #[Header('Authorization', 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vdGltZXRyYWNrZXItYmFja2VuZC5sb2NhbGhvc3Q6ODAwMy9hcGkvdjEvYXV0aC9sb2dpbiIsImlhdCI6MTcwODUzMTc1OCwiZXhwIjoxNzA4NTM1MzU4LCJuYmYiOjE3MDg1MzE3NTgsImp0aSI6ImYyQzQ5Wnp5U0xKWGFwR24iLCJzdWIiOiIyMiIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.CAbPEf7Uj6LhXw1OkVIRpLsZ2993KdkrbYKiEIa5gE8')]
     #[Response(
         [
-            "data" => [
-                "message" => "Successfully logged out"
-            ]
+            'data' => [
+                'message' => 'Successfully logged out',
+            ],
         ],
         200,
-        "Returns user data"
+        'Returns user data'
     )]
     #[Response(
         [
-            "data" => [
+            'data' => [
                 'error' => 'Unauthorized',
             ],
         ],
         401,
-        "Fail"
+        'Fail'
     )]
     public function logout(): JsonResponse
     {
-        auth()->logout();
-
-        return response()->json(['data' => ['message' => 'Successfully logged out']]);
+        return $this->authService->logout();
     }
 
     #[Endpoint('Refresh', 'Refresh user token')]
@@ -111,37 +104,26 @@ class AuthController extends Controller
     #[Header('Authorization', 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vdGltZXRyYWNrZXItYmFja2VuZC5sb2NhbGhvc3Q6ODAwMy9hcGkvdjEvYXV0aC9sb2dpbiIsImlhdCI6MTcwODUzMTc1OCwiZXhwIjoxNzA4NTM1MzU4LCJuYmYiOjE3MDg1MzE3NTgsImp0aSI6ImYyQzQ5Wnp5U0xKWGFwR24iLCJzdWIiOiIyMiIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.CAbPEf7Uj6LhXw1OkVIRpLsZ2993KdkrbYKiEIa5gE8')]
     #[Response(
         [
-            "data" => [
-                'access_token' => "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vdGltZXRyYWNrZXItYmFja2VuZC5sb2NhbGhvc3Q6ODAwMy9hcGkvdjEvYXV0aC9sb2dpbiIsImlhdCI6MTcwODUzMTc1OCwiZXhwIjoxNzA4NTM1MzU4LCJuYmYiOjE3MDg1MzE3NTgsImp0aSI6ImYyQzQ5Wnp5U0xKWGFwR24iLCJzdWIiOiIyMiIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.CAbPEf7Uj6LhXw1OkVIRpLsZ2993KdkrbYKiEIa5gE8",
+            'data' => [
+                'access_token' => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vdGltZXRyYWNrZXItYmFja2VuZC5sb2NhbGhvc3Q6ODAwMy9hcGkvdjEvYXV0aC9sb2dpbiIsImlhdCI6MTcwODUzMTc1OCwiZXhwIjoxNzA4NTM1MzU4LCJuYmYiOjE3MDg1MzE3NTgsImp0aSI6ImYyQzQ5Wnp5U0xKWGFwR24iLCJzdWIiOiIyMiIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.CAbPEf7Uj6LhXw1OkVIRpLsZ2993KdkrbYKiEIa5gE8',
                 'token_type' => 'bearer',
-                'expires_in' => 3600
+                'expires_in' => 3600,
             ],
         ],
         200,
-        "Success"
+        'Success'
     )]
     #[Response(
         [
-            "data" => [
+            'data' => [
                 'error' => 'Unauthorized',
             ],
         ],
         401,
-        "Fail"
+        'Fail'
     )]
     public function refresh(): JsonResponse
     {
-        return $this->respondWithToken(auth()->refresh());
-    }
-
-    protected function respondWithToken($token): JsonResponse
-    {
-        return response()->json([
-            "data" => [
-                'access_token' => $token,
-                'token_type' => 'bearer',
-                'expires_in' => auth()->factory()->getTTL() * 60
-            ]
-        ]);
+        return $this->authService->refresh();
     }
 }
