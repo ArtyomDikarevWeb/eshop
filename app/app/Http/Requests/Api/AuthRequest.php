@@ -25,12 +25,12 @@ class AuthRequest extends FormRequest
         return [
             'email' => [
                 'description' => 'User email',
-                'example' => 'testtest@test.com'
+                'example' => 'testtest@test.com',
             ],
             'password' => [
                 'description' => 'User password',
-                'example' => 'password'
-            ]
+                'example' => 'password',
+            ],
         ];
     }
 
