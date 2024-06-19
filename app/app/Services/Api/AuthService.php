@@ -7,6 +7,7 @@ use App\Http\Contracts\AuthServiceContract;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthService implements AuthServiceContract
 {
@@ -26,7 +27,11 @@ class AuthService implements AuthServiceContract
 
     public function refresh(): JsonResponse
     {
-        return $this->respondWithToken(auth()->refresh());
+        try {
+            return $this->respondWithToken(auth()->refresh());
+        } catch (JWTException $e) {
+            return response()->json(['data' => ['error' => 'Unauthorized']], 401);
+        }
     }
 
     public function logout(): JsonResponse

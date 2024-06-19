@@ -1,12 +1,14 @@
 <?php
 
+namespace App\Http\Controllers\Api;
+
 use App\Http\Controllers\Controller;
 use App\Http\Resources\FavouritesResource;
 use App\Models\Offer;
 use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class FavouritesContoller extends Controller
+class FavouritesController extends Controller
 {
     public function index(User $user): JsonResource
     {

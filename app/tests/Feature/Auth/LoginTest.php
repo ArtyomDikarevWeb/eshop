@@ -18,47 +18,41 @@ class LoginTest extends TestCase
 
     private string $url = 'api/auth/login';
 
-    public function testLoginSuccessful(): void
+    public function test_login_successful(): void
     {
-        $response = $this->json('POST', $this->url, [
+        $response = $this->postJson($this->url, [
             'email' => $this->mockEmail,
             'password' => $this->mockPassword,
         ]);
 
-        $response->assertOk();
+        $response
+            ->assertOk()
+            ->assertJsonStructure([
+                'data' => ['access_token', 'token_type', 'expires_in'],
+            ]);
     }
 
-    public function testLoginFail(): void
+    public function test_email_does_not_exist_in_table(): void
     {
-        $data = $this->returnFailData();
-
-        $response = $this->json('POST', $this->url, [
-            'email' => $data['email'],
-            'password' => $data['password'],
+        $response = $this->postJson($this->url, [
+            'email' => $this->mockEmailIncorrect,
+            'password' => $this->mockPassword,
         ]);
 
-        $response->assertUnauthorized();
+        $response
+            ->assertUnauthorized()
+            ->assertJsonStructure(['data' => ['error']]);
     }
 
-    private function returnFailData(): array
+    public function test_incorrect_password(): void
     {
-        $array = [
-            [
-                'email' => $this->mockEmail,
-                'password' => $this->mockPasswordIncorrect,
-            ],
-            [
-                'email' => $this->mockEmailIncorrect,
-                'password' => $this->mockPassword,
-            ],
-            [
-                'email' => $this->mockEmailIncorrect,
-                'password' => $this->mockPasswordIncorrect,
-            ],
-        ];
+        $response = $this->postJson($this->url, [
+            'email' => $this->mockEmail,
+            'password' => $this->mockPasswordIncorrect,
+        ]);
 
-        shuffle($array);
-
-        return $array[0];
+        $response
+            ->assertUnauthorized()
+            ->assertJsonStructure(['data' => ['error']]);
     }
 }
